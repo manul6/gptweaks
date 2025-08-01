@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "cursor chatgpt web-search default",
+  "version": "0.1.1",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cursor-chatgpt-websearch@mozilla.org"
+    }
+  },
+  "description": "automatically selects web search for every new chatgpt chat.",
+  "permissions": ["tabs", "scripting", "webNavigation"],
+  "host_permissions": ["https://chat.openai.com/*", "https://chatgpt.com/*"],
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/*", "https://chatgpt.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

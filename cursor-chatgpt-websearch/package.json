@@ -1,0 +1,27 @@
+{
+  "name": "cursor-chatgpt-websearch",
+  "version": "0.1.0",
+  "description": "Automatically selects Web search for every new ChatGPT chat",
+  "main": "background.js",
+  "scripts": {
+    "dev": "web-ext run --start-url https://chatgpt.com/ --firefox-binary=\"C:\\Program Files\\Firefox Nightly\\firefox.exe\"",
+    "dev-safe": "web-ext run --start-url https://chatgpt.com/ --firefox-binary=\"C:\\Program Files\\Firefox Nightly\\firefox.exe\"",
+    "dev-force-nightly": "web-ext run --start-url https://chatgpt.com/ --firefox-binary=\"C:\\Program Files\\Firefox Nightly\\firefox.exe\" --firefox-profile=\"%LOCALAPPDATA%\\Mozilla\\Firefox\\Profiles\\kutjf6z0.default-nightly\" --keep-profile-changes",
+    "dev-force-main": "web-ext run --start-url https://chatgpt.com/ --firefox-binary=\"C:\\Program Files\\Firefox Nightly\\firefox.exe\" --firefox-profile=\"%LOCALAPPDATA%\\Mozilla\\Firefox\\Profiles\\3evksrrc.default-release\" --keep-profile-changes",
+    "dev-manual": "echo \"extension is ready for manual testing - see readme for instructions\"",
+    "build": "web-ext build --overwrite-dest",
+    "lint": "web-ext lint && eslint .",
+    "test": "npm run lint"
+  },
+  "keywords": ["webextension", "chatgpt", "firefox", "automation"],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^120.0.4",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2",
+    "web-ext": "^8.9.0",
+    "webextension-polyfill": "^0.12.0"
+  }
+}
