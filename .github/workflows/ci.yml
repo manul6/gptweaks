@@ -1,0 +1,64 @@
+name: auto-release
+
+on:
+  push:
+    branches: [ "*" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: setup node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: 'cursor-chatgpt-websearch/package-lock.json'
+    
+    - name: install dependencies
+      working-directory: ./cursor-chatgpt-websearch
+      run: npm ci
+    
+    - name: build extension
+      working-directory: ./cursor-chatgpt-websearch
+      run: npm run build
+    
+    - name: get extension info
+      id: extension_info
+      working-directory: ./cursor-chatgpt-websearch
+      run: |
+        version=$(node -p "require('./package.json').version")
+        echo "version=$version" >> $github_output
+        echo "zip_name=cursor_chatgpt_web-search_default-$version.zip" >> $github_output
+    
+    - name: create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        github_token: ${{ secrets.github_token }}
+      with:
+        tag_name: v${{ steps.extension_info.outputs.version }}
+        release_name: release v${{ steps.extension_info.outputs.version }}
+        body: |
+          automatic release for version ${{ steps.extension_info.outputs.version }}
+          
+          built extension: ${{ steps.extension_info.outputs.zip_name }}
+        draft: false
+        prerelease: false
+    
+    - name: upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        github_token: ${{ secrets.github_token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cursor-chatgpt-websearch/web-ext-artifacts/${{ steps.extension_info.outputs.zip_name }}
+        asset_name: ${{ steps.extension_info.outputs.zip_name }}
+        asset_content_type: application/zip
